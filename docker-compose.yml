@@ -25,6 +25,8 @@ services:
       - ac-network
     ports:
       - ${WORLD_EXTERNAL_PORT:-8085}:8085
+    environment:
+      - LANG=C.UTF-8
     volumes:
       - type: bind
         source: ./docker/worldserver/bin
