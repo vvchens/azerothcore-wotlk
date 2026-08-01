@@ -55,3 +55,50 @@ jobs:
         run: |
           cd $AC_CODE_DIR/build
           make install
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Install Dependencies
+        run: |
+          vcpkg install openssl:x64-windows
+          vcpkg install mysql-connector-c:x64-windows
+          vcpkg install boost:x64-windows
+          vcpkg install ace:x64-windows
+
+      - name: Setup Environment Variables
+        shell: bash
+        run: |
+          echo "AC_CODE_DIR=$GITHUB_WORKSPACE" >> $GITHUB_ENV
+          echo "BUILD_CORES=$(nproc)" >> $GITHUB_ENV
+
+      - name: Create Build Directory
+        run: |
+          mkdir build
+          cd build
+
+      - name: Configure CMake
+        run: |
+          cd build
+          cmake ../ -G "Visual Studio 17 2022" -A x64 \
+            -DCMAKE_INSTALL_PREFIX="$env:GITHUB_WORKSPACE/env/dist/" \
+            -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" \
+            -DWITH_WARNINGS=1 \
+            -DTOOLS_BUILD=all \
+            -DSCRIPTS=static \
+            -DMODULES=static
+
+      - name: Build Core
+        run: |
+          cd build
+          cmake --build . --config Release --parallel $env:BUILD_CORES
+
+      - name: Install Core
+        run: |
+          cd build
+          cmake --install . --config Release
