@@ -52,7 +52,7 @@ jobs:
       - name: Configure
         run: |
           docker --version
-          docker-compose --version
+          docker compose version
           ./apps/ci/docker/ci-docker-config.sh
           ./bin/acore-docker-generate-etc
       - name: Build
