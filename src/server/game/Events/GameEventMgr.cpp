@@ -1758,7 +1758,7 @@ void GameEventMgr::SetHolidayEventTime(GameEventData& event)
 
     switch (holiday->CalendarFilterType)
     {
-    case -1: // Yearly
+    case static_cast<uint32>(-1): // Yearly
         event.occurence = YEAR / MINUTE; // Not all too useful
         break;
     case 0: // Weekly

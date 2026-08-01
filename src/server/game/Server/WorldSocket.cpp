@@ -660,7 +660,7 @@ int WorldSocket::ProcessIncoming(WorldPacket* new_pct)
     ACE_ASSERT (new_pct);
 
     // manage memory ;)
-    ACE_Auto_Ptr<WorldPacket> aptr (new_pct);
+    std::unique_ptr<WorldPacket> aptr (new_pct);
 
     const uint16 opcode = new_pct->GetOpcode();
 

@@ -59,7 +59,7 @@ enum AchievementCriteriaDataType
 
 enum AchievementCommonCategories
 {  
-    ACHIEVEMENT_CATEOGRY_GENERAL                       = -1,
+    ACHIEVEMENT_CATEOGRY_GENERAL                       = static_cast<uint32>(-1),
     ACHIEVEMENT_CATEGORY_STATISTICS                    =  1
 };
 
