@@ -24,6 +24,12 @@ time sudo apt-get install -y git lsb-release sudo ccache
 time ./acore.sh install-deps
 
 case $COMPILER in
+  "clang" )
+    time sudo apt-get install -y clang
+    echo "CCOMPILERC=\"clang\"" >> ./conf/config.sh
+    echo "CCOMPILERCXX=\"clang++\"" >> ./conf/config.sh
+    ;;
+
   "clang6" )
     time sudo apt-get install -y clang-6.0
     echo "CCOMPILERC=\"clang-6.0\"" >> ./conf/config.sh

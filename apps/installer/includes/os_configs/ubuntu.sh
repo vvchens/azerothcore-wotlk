@@ -17,7 +17,7 @@ else
     *)
       sudo apt-get install -y git cmake make gcc g++ clang libmysqlclient-dev \
       libssl-dev libbz2-dev libreadline-dev libncurses-dev \
-      mysql-server libace-6.* libace-dev curl unzip
+      mysql-server libace-dev curl unzip
       ;;
   esac
 fi
