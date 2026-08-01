@@ -83,22 +83,25 @@ jobs:
           cd build
 
       - name: Configure CMake
+        shell: cmd
         run: |
           cd build
-          cmake ../ -G "Visual Studio 17 2022" -A x64 \
-            -DCMAKE_INSTALL_PREFIX="$env:GITHUB_WORKSPACE/env/dist/" \
-            -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" \
-            -DWITH_WARNINGS=1 \
-            -DTOOLS_BUILD=all \
-            -DSCRIPTS=static \
+          cmake ../ -G "Visual Studio 17 2022" -A x64 ^
+            -DCMAKE_INSTALL_PREFIX="%GITHUB_WORKSPACE%/env/dist/" ^
+            -DCMAKE_TOOLCHAIN_FILE="%VCPKG_INSTALLATION_ROOT%/scripts/buildsystems/vcpkg.cmake" ^
+            -DWITH_WARNINGS=1 ^
+            -DTOOLS_BUILD=all ^
+            -DSCRIPTS=static ^
             -DMODULES=static
 
       - name: Build Core
+        shell: cmd
         run: |
           cd build
-          cmake --build . --config Release --parallel $env:BUILD_CORES
+          cmake --build . --config Release --parallel %BUILD_CORES%
 
       - name: Install Core
+        shell: cmd
         run: |
           cd build
           cmake --install . --config Release
