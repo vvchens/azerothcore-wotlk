@@ -1,0 +1,9 @@
+[worldserver]
+
+#
+#    MythicRPG.AoeLoot.Range
+#        Description: Range (in yards) for AoE Looting when a player uses the .aoeloot command.
+#        Default:     40.0
+#
+
+MythicRPG.AoeLoot.Range = 40.0

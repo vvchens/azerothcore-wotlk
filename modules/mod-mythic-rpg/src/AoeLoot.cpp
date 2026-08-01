@@ -11,11 +11,7 @@
 #include "ObjectMgr.h"
 #include "Map.h"
 #include "LootMgr.h"
-
-// AoE loot is best triggered when the player tries to loot a single corpse.
-// To avoid infinite loops, we need a flag or custom handling, but 3.3.5 doesn't easily support opening
-// a combined loot window. Instead, we automatically loot everything nearby directly into the bags
-// when the player interacts with a single corpse (e.g., via a spell cast or right-click that we hook).
+#include "Config.h"
 
 class aoe_loot_commandscript : public CommandScript
 {
@@ -37,7 +33,8 @@ public:
         if (!player)
             return false;
 
-        float range = 40.0f;
+        float range = sConfigMgr->GetFloatDefault("MythicRPG.AoeLoot.Range", 40.0f);
+
         std::list<Creature*> creatureList;
         Acore::AnyDeadUnitSpellTargetInRangeCheck checker(player, range, 0, false);
         Acore::CreatureListSearcher<Acore::AnyDeadUnitSpellTargetInRangeCheck> searcher(player, creatureList, checker);
@@ -51,13 +48,10 @@ public:
             {
                 Loot* loot = &creature->loot;
 
-                // If loot hasn't been generated yet, we might need to skip or generate it.
-                // Normally it is generated when the creature dies if they are tagged.
                 if (!loot->isLooted())
                 {
                     if (loot->items.empty() && loot->quest_items.empty() && loot->gold == 0)
                     {
-                        // Some creatures don't drop loot, ignore them
                         continue;
                     }
 
@@ -68,7 +62,6 @@ public:
                         loot->gold = 0;
                     }
 
-                    // Autoloot normal items
                     for (uint32 i = 0; i < loot->items.size(); ++i)
                     {
                         LootItem* item = &loot->items[i];
@@ -104,9 +97,6 @@ public:
 
     void OnLootItem(Player* player, Item* item, uint32 count, uint64 lootguid) override
     {
-        // When a player successfully loots an item, we can trigger AoE loot to grab the rest
-        // However, this might interfere with normal looting. We will keep it simple and provide the command
-        // for now, and players can macro it.
     }
 };
 
