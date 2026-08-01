@@ -1,0 +1,57 @@
+name: Wiki Build Check
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND="noninteractive" apt-get install -y \
+            git cmake make gcc g++ clang \
+            libssl-dev libbz2-dev libreadline-dev libncurses-dev \
+            libboost-all-dev libace-dev libunwind-dev libgoogle-perftools-dev \
+            mysql-server libmysqlclient-dev
+
+      - name: Setup Environment Variables
+        run: |
+          echo "AC_CODE_DIR=$GITHUB_WORKSPACE" >> $GITHUB_ENV
+          echo "BUILD_CORES=$(nproc)" >> $GITHUB_ENV
+
+      - name: Create Build Directory
+        run: |
+          mkdir -p $AC_CODE_DIR/build
+          cd $AC_CODE_DIR/build
+
+      - name: Configure CMake
+        run: |
+          cd $AC_CODE_DIR/build
+          cmake ../ \
+            -DCMAKE_INSTALL_PREFIX=$AC_CODE_DIR/env/dist/ \
+            -DCMAKE_C_COMPILER=/usr/bin/clang \
+            -DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
+            -DWITH_WARNINGS=1 \
+            -DTOOLS_BUILD=all \
+            -DSCRIPTS=static \
+            -DMODULES=static
+
+      - name: Build Core
+        run: |
+          cd $AC_CODE_DIR/build
+          make -j${BUILD_CORES}
+
+      - name: Install Core
+        run: |
+          cd $AC_CODE_DIR/build
+          make install
