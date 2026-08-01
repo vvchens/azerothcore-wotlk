@@ -1,0 +1,7 @@
+## Interface: 30300
+## Title: MythicRPG
+## Notes: Custom Item Stats and Legendary Powers Tooltip integration for WoW 3.3.5.
+## Author: Jules
+## Version: 1.0
+
+MythicRPG.lua
