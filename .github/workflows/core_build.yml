@@ -9,19 +9,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [clang6, clang7]
+        compiler: [clang]
         modules: [with, without]
     runs-on: ubuntu-latest
     name: ${{ matrix.compiler }}-${{ matrix.modules }}-modules
     env:
       COMPILER: ${{ matrix.compiler }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Checkout modules
         run: ./apps/ci/ci-install-modules.sh
         if: matrix.modules == 'with'
       - name: Cache
-        uses: actions/cache@v1.1.2
+        uses: actions/cache@v4
         with:
           path: /home/runner/.ccache
           key: ccache:${{ matrix.compiler }}:${{ matrix.modules }}-modules:${{ github.ref }}:${{ github.sha }}
@@ -48,7 +48,7 @@ jobs:
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Configure
         run: |
           docker --version
