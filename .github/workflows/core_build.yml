@@ -9,7 +9,7 @@ jobs:
       matrix:
         compiler: [clang6, clang7]
         modules: [with, without]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     name: ${{ matrix.compiler }}-${{ matrix.modules }}-modules
     env:
       COMPILER: ${{ matrix.compiler }}
@@ -44,7 +44,7 @@ jobs:
   docker-build:
     strategy:
       fail-fast: false
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Configure
