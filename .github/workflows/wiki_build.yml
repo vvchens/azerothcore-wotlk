@@ -55,6 +55,19 @@ jobs:
         run: |
           cd $AC_CODE_DIR/build
           make install
+          
+      - name: Upload Linux Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: |
+            build/bin/worldserver
+            build/bin/authserver
+            build/lib/
+            build/data/
+            build/etc/
+
+
 
   build-windows:
     runs-on: windows-latest
