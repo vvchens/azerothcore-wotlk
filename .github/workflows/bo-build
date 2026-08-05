@@ -1,0 +1,70 @@
+name: Build AzerothCore Binary
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+  workflow_dispatch: # 允许在 GitHub Actions 页面手动点击触发编译
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            git cmake make gcc g++ clang \
+            libmysqlclient-dev libssl-dev libbz2-dev \
+            libreadline-dev libncurses-dev libboost-all-dev
+
+      - name: Clone AzerothCore Source
+        run: |
+          git clone https://github.com/azerothcore/azerothcore-wotlk.git --branch master --single-branch azerothcore
+          cd azerothcore
+          # 同步可能存在的子模块/模块
+          git submodule update --init --recursive
+
+      - name: Configure CMake
+        run: |
+          mkdir -p azerothcore/build
+          cd azerothcore/build
+          cmake .. \
+            -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/ac-dist \
+            -DDCMAKE_C_COMPILER=/usr/bin/clang \
+            -DDCMAKE_CXX_COMPILER=/usr/bin/clang++ \
+            -DTOOLS_BUILD=all \
+            -DSCRIPTS=static
+
+      - name: Build Core
+        run: |
+          cd azerothcore/build
+          # 使用 CPU 核心数加速并行编译
+          make -j$(nproc)
+
+      - name: Install Core to Staging
+        run: |
+          cd azerothcore/build
+          make install
+
+      - name: Prepare Deployment Package
+        run: |
+          # 复制数据库文件到发布目录
+          mkdir -p $GITHUB_WORKSPACE/ac-dist/data/sql
+          cp -r azerothcore/data/sql/* $GITHUB_WORKSPACE/ac-dist/data/sql/
+          
+          # 创建打包 ZIP
+          cd $GITHUB_WORKSPACE
+          zip -r azerothcore-build-ubuntu2204.zip ac-dist/
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: azerothcore-binaries-ubuntu2204
+          path: azerothcore-build-ubuntu2204.zip
+          retention-days: 7
