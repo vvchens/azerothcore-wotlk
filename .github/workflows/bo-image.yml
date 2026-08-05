@@ -1,0 +1,38 @@
+name: Bo - Build AzerothCore Builder Image
+
+on:
+  workflow_dispatch: # 仅支持手动触发
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # 赋予写入 GHCR 镜像仓库的权限
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          inline-script: |
+            FROM ubuntu:22.04
+            ENV DEBIAN_FRONTEND=noninteractive
+            RUN apt-get update && apt-get install -y \
+              git cmake make gcc g++ clang \
+              libmysqlclient-dev libssl-dev libbz2-dev \
+              libreadline-dev libncurses-dev libboost-all-dev patchelf zip \
+              && rm -rf /var/lib/apt/lists/*
+          push: true
+          # 镜像名称格式：ghcr.io/你的用户名/仓库名/ac-builder:22.04
+          tags: ghcr.io/${{ github.repository }}/ac-builder:22.04
