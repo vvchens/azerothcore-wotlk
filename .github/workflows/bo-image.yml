@@ -14,6 +14,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # 在工作区动态创建一个真实的 Dockerfile 文件
+      - name: Create Dockerfile
+        run: |
+          cat << 'EOF' > Dockerfile
+          FROM ubuntu:22.04
+          ENV DEBIAN_FRONTEND=noninteractive
+          RUN apt-get update && apt-get install -y \
+            git cmake make gcc g++ clang \
+            libmysqlclient-dev libssl-dev libbz2-dev \
+            libreadline-dev libncurses-dev libboost-all-dev patchelf zip \
+            && rm -rf /var/lib/apt/lists/*
+          EOF
+
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
@@ -27,14 +40,7 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v6
         with:
-          # 使用 Dockerfile-inline 直接嵌入 Dockerfile 内容
-          Dockerfile-inline: |
-            FROM ubuntu:22.04
-            ENV DEBIAN_FRONTEND=noninteractive
-            RUN apt-get update && apt-get install -y \
-              git cmake make gcc g++ clang \
-              libmysqlclient-dev libssl-dev libbz2-dev \
-              libreadline-dev libncurses-dev libboost-all-dev patchelf zip \
-              && rm -rf /var/lib/apt/lists/*
+          context: .
+          file: ./Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository }}/ac-builder:22.04
