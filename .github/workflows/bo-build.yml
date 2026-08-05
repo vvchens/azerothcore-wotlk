@@ -21,17 +21,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            git cmake make gcc g++ clang \
-            libmysqlclient-dev libssl-dev libbz2-dev \
-            libreadline-dev libncurses-dev libboost-all-dev
-
       - name: Clone AzerothCore Source
         run: |
-          git clone https://github.com/azerothcore/azerothcore-wotlk.git --branch master --single-branch azerothcore
+          git clone https://github.com/vvchens/azerothcore-wotlk.git --branch master --single-branch azerothcore --depth 1
           cd azerothcore
           # 同步可能存在的子模块/模块
           git submodule update --init --recursive
