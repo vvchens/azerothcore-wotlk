@@ -59,7 +59,7 @@ public:
         session->InstanceId = instance->GetInstanceId();
 
         ChatHandler(player->GetSession()).SendSysMessage(
-            "|cFF00FF00[Dungeon Master]|r Preparing the challenge...");
+            "|cFF00FF00[地下城大师]|r 正在准备挑战...");
 
         sDungeonMasterMgr->PopulateDungeon(session, instance);
 
@@ -69,7 +69,7 @@ public:
 
         char buf[256];
         snprintf(buf, sizeof(buf),
-            "|cFF00FF00[Dungeon Master]|r |cFFFFFFFF%u|r enemies and |cFFFFFFFF%u|r boss(es) spawned. "
+            "|cFF00FF00[地下城大师]|r 生成了 |cFFFFFFFF%u|r 个敌人和 |cFFFFFFFF%u|r 个首领。"
             "Creature levels: |cFFFFFFFF%u-%u|r. Good luck!",
             session->TotalMobs, session->TotalBosses,
             session->LevelBandMin, session->LevelBandMax);

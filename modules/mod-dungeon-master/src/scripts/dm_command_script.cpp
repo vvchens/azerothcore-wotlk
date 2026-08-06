@@ -44,7 +44,7 @@ public:
     static bool HandleStatus(ChatHandler* h)
     {
         char buf[256];
-        h->SendSysMessage("=== Dungeon Master Status ===");
+        h->SendSysMessage("=== 地下城大师状态 ===");
         snprintf(buf, sizeof(buf), "Enabled: %s", sDMConfig->IsEnabled() ? "Yes" : "No");
         h->SendSysMessage(buf);
         snprintf(buf, sizeof(buf), "Active: %u / %u",

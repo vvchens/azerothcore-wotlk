@@ -86,7 +86,7 @@ public:
         if (!sDMConfig->IsEnabled())
         {
             ChatHandler(player->GetSession()).SendSysMessage(
-                "|cFFFF0000[Dungeon Master]|r The Dungeon Master is currently unavailable.");
+                "|cFFFF0000[地下城大师]|r 地下城大师目前不可用。");
             player->PlayerTalkClass->SendCloseGossip();
             return true;
         }
@@ -95,7 +95,7 @@ public:
             LOG_INFO("module", "DungeonMaster: NPC blocked {} — still in active session",
                 player->GetName());
             ChatHandler(player->GetSession()).SendSysMessage(
-                "|cFFFF0000[Dungeon Master]|r You are already in an active challenge!");
+                "|cFFFF0000[地下城大师]|r 你已经在一个进行中的挑战中！");
             player->PlayerTalkClass->SendCloseGossip();
             return true;
         }
@@ -124,7 +124,7 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_BATTLE,
                 "|cFFFF0000Quit Roguelike Run|r",
                 GOSSIP_SENDER_MAIN, GOSSIP_ACTION_ROGUELIKE_QUIT);
-            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Never mind",
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "不用了",
                 GOSSIP_SENDER_MAIN, GOSSIP_ACTION_CANCEL);
 
             SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
@@ -137,7 +137,7 @@ public:
                 player->GetName(), rem);
             char buf[256];
             snprintf(buf, sizeof(buf),
-                "|cFFFFFF00[Dungeon Master]|r Wait |cFFFFFFFF%u|r min |cFFFFFFFF%u|r sec before your next challenge.",
+                "|cFFFFFF00[地下城大师]|r 等待 |cFFFFFFFF%u|r 分 |cFFFFFFFF%u|r 秒才能开始下一次挑战。",
                 rem / 60, rem % 60);
             ChatHandler(player->GetSession()).SendSysMessage(buf);
             player->PlayerTalkClass->SendCloseGossip();
@@ -156,7 +156,7 @@ public:
             if (!sDungeonMasterMgr->CanCreateNewSession())
             {
                 ChatHandler(player->GetSession()).SendSysMessage(
-                    "|cFFFF0000[Dungeon Master]|r Too many challenges running. Try again later.");
+                    "|cFFFF0000[地下城大师]|r 运行的挑战太多。请稍后再试。");
                 player->PlayerTalkClass->SendCloseGossip();
                 return true;
             }
@@ -297,14 +297,14 @@ private:
     void ShowMainMenu(Player* player, Creature* creature)
     {
         player->PlayerTalkClass->ClearMenus();
-        AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "Begin Challenge",
+        AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "开始挑战",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_MAIN_START);
         if (sDMConfig->IsRoguelikeEnabled())
-            AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "|cFF00FFFFRoguelike Mode|r",
+            AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "|cFF00FFFFRoguelike 模式|r",
                 GOSSIP_SENDER_MAIN, GOSSIP_ACTION_ROGUELIKE_START);
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "How does this work?",
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "这是怎么运作的？",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_MAIN_INFO);
-        AddGossipItemFor(player, GOSSIP_ICON_TABARD, "|cFFFFD700Statistics & Leaderboards|r",
+        AddGossipItemFor(player, GOSSIP_ICON_TABARD, "|cFFFFD700统计与排行榜|r",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_STATS_MENU);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
     }
@@ -331,7 +331,7 @@ private:
                 d.IsValidForLevel(lvl) ? GOSSIP_ICON_BATTLE : GOSSIP_ICON_CHAT,
                 buf, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_DIFF_BASE + d.Id);
         }
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< Back|r", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_CANCEL);
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< 返回|r", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_CANCEL);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
     }
 
@@ -362,7 +362,7 @@ private:
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_SCALE_PARTY);
         AddGossipItemFor(player, GOSSIP_ICON_INTERACT_1, buf2,
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_SCALE_TIER);
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< Back|r",
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< 返回|r",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_CANCEL);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
     }
@@ -372,7 +372,7 @@ private:
         player->PlayerTalkClass->ClearMenus();
         for (const auto& t : sDMConfig->GetThemes())
             AddGossipItemFor(player, GOSSIP_ICON_BATTLE, t.Name, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_THEME_BASE + t.Id);
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< Back|r", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_CANCEL);
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< 返回|r", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_CANCEL);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
     }
 
@@ -413,7 +413,7 @@ private:
 
         // "Random Dungeon" stays reachable: shown only on the first page.
         if (page == 0)
-            AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "|cFFFFD700Random Dungeon|r",
+            AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "|cFFFFD700随机地下城|r",
                 GOSSIP_SENDER_MAIN, GOSSIP_ACTION_DUNGEON_RANDOM);
 
         // Render this page's slice of dungeons.
@@ -436,13 +436,13 @@ private:
 
         // Page navigation, rendered conditionally.
         if (page > 0)
-            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFF00FF00<< Previous Page|r",
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFF00FF00<< 上一页|r",
                 GOSSIP_SENDER_MAIN, GOSSIP_ACTION_DUNGEON_PREV_PAGE);
         if (end < total)
-            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFF00FF00Next Page >>|r",
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFF00FF00下一页 >>|r",
                 GOSSIP_SENDER_MAIN, GOSSIP_ACTION_DUNGEON_NEXT_PAGE);
 
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< Back|r", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_CANCEL);
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< 返回|r", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_CANCEL);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
     }
 
@@ -484,9 +484,9 @@ private:
             ChatHandler(player->GetSession()).SendSysMessage("|cFFFFFF00  All party members will be teleported!|r");
         ChatHandler(player->GetSession()).SendSysMessage("|cFFFFD700========================================|r");
 
-        AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "|cFF00FF00>> START CHALLENGE <<|r",
+        AddGossipItemFor(player, GOSSIP_ICON_BATTLE, "|cFF00FF00>> 开始挑战 <<|r",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_CONFIRM);
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< Cancel|r",
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< 取消|r",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_CANCEL);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
     }
@@ -494,16 +494,16 @@ private:
     void ShowInfoMenu(Player* player, Creature* creature)
     {
         player->PlayerTalkClass->ClearMenus();
-        ChatHandler(player->GetSession()).SendSysMessage("|cFFFFD700========= Dungeon Master Challenge =========|r");
+        ChatHandler(player->GetSession()).SendSysMessage("|cFFFFD700========= 地下城大师挑战 =========|r");
         ChatHandler(player->GetSession()).SendSysMessage("|cFFFFFFFF1.|r Choose a difficulty tier");
         ChatHandler(player->GetSession()).SendSysMessage("|cFFFFFFFF2.|r Pick scaling: party level or dungeon difficulty");
         ChatHandler(player->GetSession()).SendSysMessage("|cFFFFFFFF3.|r Pick a creature theme");
-        ChatHandler(player->GetSession()).SendSysMessage("|cFFFFFFFF4.|r Select a dungeon or go random");
+        ChatHandler(player->GetSession()).SendSysMessage("|cFFFFFFFF4.|r 选择一个地下城或随机");
         ChatHandler(player->GetSession()).SendSysMessage("|cFFFFFFFF5.|r You'll be teleported to a cleared instance");
         ChatHandler(player->GetSession()).SendSysMessage("|cFFFFFFFF6.|r Defeat the boss to complete the challenge");
         ChatHandler(player->GetSession()).SendSysMessage("|cFFFFFFFF7.|r Collect gold and gear rewards!");
         ChatHandler(player->GetSession()).SendSysMessage("|cFFFFD700==========================================|r");
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "<< Back", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_CANCEL);
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "<< 返回", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_CANCEL);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
     }
 
@@ -512,14 +512,14 @@ private:
     void ShowStatsAndBoardsMenu(Player* player, Creature* creature)
     {
         player->PlayerTalkClass->ClearMenus();
-        AddGossipItemFor(player, GOSSIP_ICON_TABARD, "My Normal Run Stats",
+        AddGossipItemFor(player, GOSSIP_ICON_TABARD, "我的普通挑战统计",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_STATS_NORMAL);
         if (sDMConfig->IsRoguelikeEnabled())
-            AddGossipItemFor(player, GOSSIP_ICON_TABARD, "|cFF00FFFFMy Roguelike Stats|r",
+            AddGossipItemFor(player, GOSSIP_ICON_TABARD, "|cFF00FFFF我的Roguelike统计|r",
                 GOSSIP_SENDER_MAIN, GOSSIP_ACTION_STATS_ROGUELIKE);
-        AddGossipItemFor(player, GOSSIP_ICON_TABARD, "|cFFFFD700Leaderboards|r",
+        AddGossipItemFor(player, GOSSIP_ICON_TABARD, "|cFFFFD700排行榜|r",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_BOARD_MENU);
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< Back|r",
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< 返回|r",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_CANCEL);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
     }
@@ -578,9 +578,9 @@ private:
 
         chat.SendSysMessage("|cFFFFD700══════════════════════════════════════════|r");
 
-        AddGossipItemFor(player, GOSSIP_ICON_TABARD, "|cFFFFD700View Leaderboards|r",
+        AddGossipItemFor(player, GOSSIP_ICON_TABARD, "|cFFFFD700查看排行榜|r",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_BOARD_MENU);
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< Back|r",
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< 返回|r",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_STATS_MENU);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
     }
@@ -637,9 +637,9 @@ private:
 
         chat.SendSysMessage("|cFF00FFFF══════════════════════════════════════════|r");
 
-        AddGossipItemFor(player, GOSSIP_ICON_TABARD, "|cFFFFD700View Leaderboards|r",
+        AddGossipItemFor(player, GOSSIP_ICON_TABARD, "|cFFFFD700查看排行榜|r",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_BOARD_MENU);
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< Back|r",
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< 返回|r",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_STATS_MENU);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
     }
@@ -661,7 +661,7 @@ private:
                 "|cFF00FFFFRoguelike — Most Floors|r",
                 GOSSIP_SENDER_MAIN, GOSSIP_ACTION_BOARD_RL_FLOORS);
         }
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< Back|r",
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< 返回|r",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_STATS_MENU);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
     }
@@ -711,7 +711,7 @@ private:
         }
 
         chat.SendSysMessage("|cFFFFD700════════════════════════════════════════════════|r");
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< Back|r",
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< 返回|r",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_BOARD_MENU);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
     }
@@ -760,7 +760,7 @@ private:
         }
 
         chat.SendSysMessage("|cFF00FFFF══════════════════════════════════════════════|r");
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< Back|r",
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< 返回|r",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_BOARD_MENU);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
     }
@@ -797,7 +797,7 @@ private:
                 d.IsValidForLevel(lvl) ? GOSSIP_ICON_BATTLE : GOSSIP_ICON_CHAT,
                 buf, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_DIFF_BASE + d.Id);
         }
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< Back|r",
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< 返回|r",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_CANCEL);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
     }
@@ -818,7 +818,7 @@ private:
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_ROGUELIKE_SCALE_PARTY);
         AddGossipItemFor(player, GOSSIP_ICON_INTERACT_1, buf2,
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_ROGUELIKE_SCALE_TIER);
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< Back|r",
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< 返回|r",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_CANCEL);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
     }
@@ -829,7 +829,7 @@ private:
         for (const auto& t : sDMConfig->GetThemes())
             AddGossipItemFor(player, GOSSIP_ICON_BATTLE, t.Name,
                 GOSSIP_SENDER_MAIN, GOSSIP_ACTION_ROGUELIKE_THEME + t.Id);
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< Back|r",
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|cFFFF0000<< 返回|r",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_CANCEL);
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
     }
@@ -843,7 +843,7 @@ private:
           auto it = sSelections.find(player->GetGUID());
           if (it == sSelections.end()) {
               ChatHandler(player->GetSession()).SendSysMessage(
-                  "|cFFFF0000[Roguelike]|r Selection expired. Try again.");
+                  "|cFFFF0000[Roguelike]|r 选择已过期。请重试。");
               return; }
           sel = it->second;
           sSelections.erase(it); }
@@ -852,7 +852,7 @@ private:
         if (!diff || !diff->IsValidForLevel(player->GetLevel()))
         {
             ChatHandler(player->GetSession()).SendSysMessage(
-                "|cFFFF0000[Roguelike]|r Level requirement not met!");
+                "|cFFFF0000[Roguelike]|r 未达到等级要求！");
             return;
         }
 
@@ -878,7 +878,7 @@ private:
         { std::lock_guard<std::mutex> lk(sSelMutex);
           auto it = sSelections.find(player->GetGUID());
           if (it == sSelections.end()) {
-              ChatHandler(player->GetSession()).SendSysMessage("|cFFFF0000[Dungeon Master]|r Selection expired. Try again.");
+              ChatHandler(player->GetSession()).SendSysMessage("|cFFFF0000[地下城大师]|r 选择已过期。请重试。");
               return; }
           sel = it->second;
           sSelections.erase(it); }
@@ -886,7 +886,7 @@ private:
         const DifficultyTier* diff = sDMConfig->GetDifficulty(sel.DifficultyId);
         if (!diff || !diff->IsValidForLevel(player->GetLevel()))
         {
-            ChatHandler(player->GetSession()).SendSysMessage("|cFFFF0000[Dungeon Master]|r Level requirement not met!");
+            ChatHandler(player->GetSession()).SendSysMessage("|cFFFF0000[地下城大师]|r 未达到等级要求！");
             return;
         }
 
@@ -896,7 +896,7 @@ private:
         {
             auto dgs = sDMConfig->GetDungeonsForLevel(diff->MinLevel, diff->MaxLevel);
             if (dgs.empty()) {
-                ChatHandler(player->GetSession()).SendSysMessage("|cFFFF0000[Dungeon Master]|r No dungeons available!");
+                ChatHandler(player->GetSession()).SendSysMessage("|cFFFF0000[地下城大师]|r 没有可用的地下城！");
                 return; }
             static thread_local std::mt19937 rng{ std::random_device{}() };
             mapId = dgs[std::uniform_int_distribution<size_t>(0, dgs.size()-1)(rng)]->MapId;
@@ -904,15 +904,15 @@ private:
 
         Session* s = sDungeonMasterMgr->CreateSession(player, sel.DifficultyId, sel.ThemeId, mapId, sel.ScaleToParty);
         if (!s) {
-            ChatHandler(player->GetSession()).SendSysMessage("|cFFFF0000[Dungeon Master]|r Failed to create session!");
+            ChatHandler(player->GetSession()).SendSysMessage("|cFFFF0000[地下城大师]|r 创建会话失败！");
             return; }
 
         if (!sDungeonMasterMgr->StartDungeon(s)) {
-            ChatHandler(player->GetSession()).SendSysMessage("|cFFFF0000[Dungeon Master]|r Failed to initialize dungeon!");
+            ChatHandler(player->GetSession()).SendSysMessage("|cFFFF0000[地下城大师]|r 初始化地下城失败！");
             sDungeonMasterMgr->AbandonSession(s->SessionId); return; }
 
         if (!sDungeonMasterMgr->TeleportPartyIn(s)) {
-            ChatHandler(player->GetSession()).SendSysMessage("|cFFFF0000[Dungeon Master]|r Teleport failed!");
+            ChatHandler(player->GetSession()).SendSysMessage("|cFFFF0000[地下城大师]|r 传送失败！");
             sDungeonMasterMgr->AbandonSession(s->SessionId); return; }
 
         if (sDMConfig->ShouldAnnounceCompletion())
@@ -921,13 +921,13 @@ private:
             const DungeonInfo* dg = sDMConfig->GetDungeon(mapId);
             char buf[256];
             snprintf(buf, sizeof(buf),
-                "|cFF00FF00[Dungeon Master]|r |cFFFFFFFF%s|r started a |cFFFFD700%s|r |cFF00FFFF%s|r challenge!",
+                "|cFF00FF00[地下城大师]|r |cFFFFFFFF%s|r 开始了一个 |cFFFFD700%s|r |cFF00FFFF%s|r 挑战！",
                 player->GetName().c_str(), diff->Name.c_str(),
                 theme ? theme->Name.c_str() : "Random");
 
             char detail[256];
             snprintf(detail, sizeof(detail),
-                "|cFFFFD700[Dungeon Master]|r Difficulty: |cFF00FF00%s|r  Theme: |cFF00FF00%s|r  Dungeon: |cFF00FF00%s|r  Scaling: |cFF00FF00%s|r",
+                "|cFFFFD700[地下城大师]|r 难度: |cFF00FF00%s|r  主题: |cFF00FF00%s|r  地下城: |cFF00FF00%s|r  难度缩放: |cFF00FF00%s|r",
                 diff->Name.c_str(),
                 theme ? theme->Name.c_str() : "Random",
                 dg ? dg->Name.c_str() : "Random",

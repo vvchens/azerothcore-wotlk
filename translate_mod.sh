@@ -1,0 +1,43 @@
+#!/bin/bash
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/\[Dungeon Master\]/[地下城大师]/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Dungeon Master Reward/地下城大师奖励/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Your bags were full. Here is your reward!/你的背包已满。这是你的奖励！/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/The Dungeon Master is currently unavailable./地下城大师目前不可用。/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/You are already in an active challenge!/你已经在一个进行中的挑战中！/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Wait |cFFFFFFFF%u|r min |cFFFFFFFF%u|r sec before your next challenge./等待 |cFFFFFFFF%u|r 分 |cFFFFFFFF%u|r 秒才能开始下一次挑战。/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Too many challenges running. Try again later./运行的挑战太多。请稍后再试。/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/========= Dungeon Master Challenge =========/========= 地下城大师挑战 =========/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Selection expired. Try again./选择已过期。请重试。/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Level requirement not met!/未达到等级要求！/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/No dungeons available!/没有可用的地下城！/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Failed to create session!/创建会话失败！/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Failed to initialize dungeon!/初始化地下城失败！/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Teleport failed!/传送失败！/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/started a |cFFFFD700%s|r |cFF00FFFF%s|r challenge!/开始了一个 |cFFFFD700%s|r |cFF00FFFF%s|r 挑战！/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Difficulty: |cFF00FF00%s|r  Theme: |cFF00FF00%s|r  Dungeon: |cFF00FF00%s|r  Scaling: |cFF00FF00%s|r/难度: |cFF00FF00%s|r  主题: |cFF00FF00%s|r  地下城: |cFF00FF00%s|r  难度缩放: |cFF00FF00%s|r/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Welcome to |cFFFFFFFF%s|r! /欢迎来到 |cFFFFFFFF%s|r！/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Teleport failed! You may lack access to this dungeon./传送失败！你可能没有进入该地下城的权限。/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/A |cFFFF8800rare enemy|r lurks in this dungeon!/这个地下城里潜伏着一个 |cFFFF8800稀有敌人|r！/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Boss defeated! |cFFFFFFFF%u|r remaining./首领被击败！还剩 |cFFFFFFFF%u|r 个。/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Total party wipe! Challenge failed./小队全军覆没！挑战失败。/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/You have fallen! /你倒下了！/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/You received: |cFFFFD700%u|rg |cFFC0C0C0%u|rs |cFFB87333%u|rc/你获得了: |cFFFFD700%u|r金 |cFFC0C0C0%u|r银 |cFFB87333%u|r铜/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/No suitable gear found for your level and class. Gold only./未找到适合你等级和职业的装备。只奖励金币。/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/You received: |cFFFFFFFF%s|r/你获得了: |cFFFFFFFF%s|r/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Bags full! Reward mailed to you./背包已满！奖励已邮寄给你。/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Reward mailed: |cFFFFFFFF%s|r/奖励已邮寄: |cFFFFFFFF%s|r/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Challenge complete! Distributing rewards.../挑战完成！正在发放奖励.../g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Challenge ended. No rewards given./挑战结束。没有发放奖励。/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Preparing the challenge.../正在准备挑战.../g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/|cFFFFFFFF%u|r enemies and |cFFFFFFFF%u|r boss(es) spawned. /生成了 |cFFFFFFFF%u|r 个敌人和 |cFFFFFFFF%u|r 个首领。/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/|cFFFFFFFF%u|r enemies and /生成了 |cFFFFFFFF%u|r 个敌人和 /g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/The boss enters a new phase!/首领进入了新阶段！/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Revived at entrance. Get back in there!/已在入口复活。快回去战斗吧！/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/Time'\''s up! Challenge failed./时间到！挑战失败。/g'
+find modules/mod-dungeon-master -type f \( -name "*.cpp" -o -name "*.h" \) | xargs sed -i 's/=== Dungeon Master Status ===/=== 地下城大师状态 ===/g'
+
+# sql updates
+sed -i "s/'Dungeon Master'/'地下城大师'/g" modules/mod-dungeon-master/data/sql/db-world/base/dm_setup.sql
+sed -i "s/'Dungeon Master'/'地下城大师'/g" modules/mod-dungeon-master/data/sql/db-characters/base/dm_characters_setup.sql
+sed -i "s/'Dungeon Provisioner'/'地下城物资商'/g" modules/mod-dungeon-master/data/sql/db-world/base/dm_setup.sql
+sed -i "s/'Roguelike Supplies'/'Roguelike补给'/g" modules/mod-dungeon-master/data/sql/db-world/base/dm_setup.sql

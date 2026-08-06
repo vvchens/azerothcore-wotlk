@@ -248,7 +248,7 @@ bool RoguelikeMgr::StartRun(Player* leader, uint32 difficultyId, uint32 themeId,
     if (!sDungeonMasterMgr->StartDungeon(session))
     {
         ChatHandler(leader->GetSession()).SendSysMessage(
-            "|cFFFF0000[Roguelike]|r Failed to initialize dungeon!");
+            "|cFFFF0000[Roguelike]|r 初始化地下城失败！");
         sDungeonMasterMgr->CleanupRoguelikeSession(session->SessionId, false);
         return false;
     }
@@ -256,7 +256,7 @@ bool RoguelikeMgr::StartRun(Player* leader, uint32 difficultyId, uint32 themeId,
     if (!sDungeonMasterMgr->TeleportPartyIn(session))
     {
         ChatHandler(leader->GetSession()).SendSysMessage(
-            "|cFFFF0000[Roguelike]|r Teleport failed!");
+            "|cFFFF0000[Roguelike]|r 传送失败！");
         sDungeonMasterMgr->CleanupRoguelikeSession(session->SessionId, false);
         return false;
     }
