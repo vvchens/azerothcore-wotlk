@@ -1,0 +1,57 @@
+# docker-compose.debian12.yml - Custom Docker Compose for AzerothCore on Debian 12
+# Uses the custom Dockerfile.debian12
+
+services:
+  # MySQL Database
+  ac-database:
+    container_name: ac-database
+    image: mysql:8.0
+    networks:
+      - ac-network
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=acore_auth
+    volumes:
+      - ac-database:/var/lib/mysql
+    restart: unless-stopped
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=password --execute \"SHOW DATABASES;\""
+      interval: 5s
+      timeout: 10s
+      retries: 40
+
+  # AzerothCore Build & Server (combined)
+  ac-server:
+    container_name: ac-server
+    build:
+      context: .
+      dockerfile: Dockerfile.debian12
+    networks:
+      - ac-network
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    environment:
+      - AC_DATA_DIR=/azerothcore/env/dist/data
+      - AC_LOGS_DIR=/azerothcore/env/dist/logs
+      - AC_LOGIN_DATABASE_INFO=ac-database;3306;root;password;acore_auth
+      - AC_WORLD_DATABASE_INFO=ac-database;3306;root;password;acore_world
+      - AC_CHARACTER_DATABASE_INFO=ac-database;3306;root;password;acore_characters
+    ports:
+      - "8085:8085"
+      - "3724:3724"
+    volumes:
+      - ./env/dist/etc:/azerothcore/env/dist/etc
+      - ./env/dist/logs:/azerothcore/env/dist/logs
+      - ./env/dist/data:/azerothcore/env/dist/data
+    depends_on:
+      ac-database:
+        condition: service_healthy
+
+networks:
+  ac-network:
+
+volumes:
+  ac-database:

@@ -1,0 +1,132 @@
+# AzerothCore WotLK - Custom Dockerfile based on Debian 12
+# Follows https://www.azerothcore.org/wiki/linux-core-installation
+
+FROM debian:12
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
+ENV AC_FORCE_CREATE_DB=1
+
+# Install basic dependencies and set timezone
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    tzdata ca-certificates \
+    && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && echo $TZ > /etc/timezone \
+    && dpkg-reconfigure --frontend noninteractive tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install build dependencies per official AzerothCore Linux installation guide
+# Install MySQL 8.0 from official repository (required for mysql_ssl_mode API)
+# Order matters: add GPG key BEFORE installing mysql-apt-config
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget gnupg lsb-release \
+    # Add MySQL GPG key first (the old one expired) - use MySQL's official key URL
+    && wget -qO- https://repo.mysql.com/RPM-GPG-KEY-mysql | gpg --dearmor -o /etc/apt/trusted.gpg.d/mysql.gpg \
+    && wget https://dev.mysql.com/get/mysql-apt-config_0.8.39-1_all.deb \
+    && DEBIAN_FRONTEND=noninteractive dpkg -i mysql-apt-config_0.8.39-1_all.deb \
+    # Now update with the correct GPG key in place
+    && apt-get update \
+    # Install MySQL 8.0 client libraries first
+    && apt-get install -y --no-install-recommends \
+    libmysqlclient-dev \
+    && apt-get install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    git \
+    clang \
+    libssl-dev \
+    libreadline-dev \
+    libncurses5-dev \
+    libbz2-dev \
+    libboost-all-dev \
+    ccache \
+    ninja-build \
+    curl \
+    unzip \
+    # libmysql++-dev conflicts with MySQL's libmysqlclient-dev, so we'll build it from source later if needed
+    && rm -rf /var/lib/apt/lists/* \
+    && rm mysql-apt-config_0.8.39-1_all.deb
+
+# Create acore user (UID 1000) for non-root operation
+RUN groupadd -g 1000 acore && \
+    useradd -u 1000 -g acore -m -s /bin/bash acore
+
+# Create directory structure
+RUN mkdir -p /azerothcore/env/dist/bin \
+    /azerothcore/env/dist/etc \
+    /azerothcore/env/dist/data/Cameras \
+    /azerothcore/env/dist/data/dbc \
+    /azerothcore/env/dist/data/maps \
+    /azerothcore/env/dist/data/mmaps \
+    /azerothcore/env/dist/data/vmaps \
+    /azerothcore/env/dist/logs \
+    /azerothcore/env/dist/temp \
+    /azerothcore/build && \
+    chown -R acore:acore /azerothcore
+
+WORKDIR /azerothcore
+
+# Copy source code (we'll use the cloned repo)
+COPY --chown=acore:acore . /azerothcore/
+
+# Switch to acore user for build
+USER acore
+
+# Configure and build AzerothCore
+WORKDIR /azerothcore/build
+
+# Configure with CMake (following official guide recommendations)
+RUN cmake /azerothcore \
+    -G Ninja \
+    -DCMAKE_INSTALL_PREFIX="/azerothcore/env/dist" \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DSCRIPTS=static \
+    -DMODULES=static \
+    -DTOOLS_BUILD=all \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+    -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+    -DBoost_USE_STATIC_LIBS=ON \
+    -DWITH_WARNINGS=ON
+
+# Build with all available cores
+RUN cmake --build . --config RelWithDebInfo -j$(nproc)
+
+# Install to the dist directory
+RUN cmake --install . --config RelWithDebInfo
+
+# Switch back to root for final setup
+USER root
+
+# Install runtime dependencies (MySQL 8.4 client libraries - uses libmysqlclient24)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libmysqlclient24 \
+    libreadline8 \
+    libicu72 \
+    libncurses6 \
+    mysql-client \
+    gettext-base \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy config files to etc directory
+RUN cp -r /azerothcore/conf/dist/* /azerothcore/env/dist/etc/ && \
+    chown -R acore:acore /azerothcore/env/dist/etc
+
+# Create entrypoint script
+COPY entrypoint.sh /azerothcore/entrypoint.sh
+RUN chmod +x /azerothcore/entrypoint.sh && chown acore:acore /azerothcore/entrypoint.sh
+
+# Switch to acore user
+USER acore
+
+# Set PATH
+ENV PATH="/azerothcore/env/dist/bin:$PATH"
+
+WORKDIR /azerothcore/env/dist
+
+ENTRYPOINT ["/azerothcore/entrypoint.sh"]
+
+# Default command
+CMD ["bash"]
