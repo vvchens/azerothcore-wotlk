@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     # 核心改动：直接在预建好的自定义镜像容器中运行编译
     container:
       image: ghcr.io/${{ github.repository }}/ac-builder:22.04
