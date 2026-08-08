@@ -1,0 +1,3 @@
+[submodule "modules/mod-rogue-spells"]
+	path = modules/mod-rogue-spells
+	url = https://github.com/vvchens/mod-rogue-spells.git
