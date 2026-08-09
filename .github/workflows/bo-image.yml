@@ -23,7 +23,7 @@ jobs:
           RUN apt-get update && apt-get install -y \
             git cmake make gcc g++ clang \
             libmysqlclient-dev libssl-dev libbz2-dev \
-            libreadline-dev libncurses-dev libboost-all-dev patchelf zip \
+            libreadline-dev libncurses-dev libboost-all-dev patchelf \
             && rm -rf /var/lib/apt/lists/*
           EOF
 

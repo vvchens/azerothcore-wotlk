@@ -3,8 +3,6 @@ name: Bo - Build AzerothCore Binary
 on:
   push:
     branches: [ "master", "main" ]
-  pull_request:
-    branches: [ "master", "main" ]
   workflow_dispatch: # 允许在 GitHub Actions 页面手动点击触发编译
 
 jobs:
@@ -22,19 +20,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Clone AzerothCore Source
-        run: |
-          git clone https://github.com/vvchens/azerothcore-wotlk.git --branch master --single-branch azerothcore --depth 1
-          cd azerothcore
-          # 同步可能存在的子模块/模块
-          git submodule update --init --recursive
+          token: ${{ secrets.TESTPAT }}
 
       - name: Configure CMake
         run: |
-          mkdir -p azerothcore/build
-          cd azerothcore/build
+          mkdir -p build
+          cd build
           cmake .. \
             -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/ac-dist \
             -DDCMAKE_C_COMPILER=/usr/bin/clang \
@@ -44,28 +35,24 @@ jobs:
 
       - name: Build Core
         run: |
-          cd azerothcore/build
+          cd build
           # 使用 CPU 核心数加速并行编译
           make -j$(nproc)
 
       - name: Install Core to Staging
         run: |
-          cd azerothcore/build
+          cd build
           make install
 
       - name: Prepare Deployment Package
         run: |
           # 复制数据库文件到发布目录
           mkdir -p $GITHUB_WORKSPACE/ac-dist/data/sql
-          cp -r azerothcore/data/sql/* $GITHUB_WORKSPACE/ac-dist/data/sql/
-          
-          # 创建打包 ZIP
-          cd $GITHUB_WORKSPACE
-          zip -r azerothcore-build-ubuntu2204.zip ac-dist/
+          cp -r data/sql/* $GITHUB_WORKSPACE/ac-dist/data/sql/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: azerothcore-binaries-ubuntu2204
-          path: azerothcore-build-ubuntu2204.zip
+          path: $GITHUB_WORKSPACE/ac-dist
           retention-days: 7
